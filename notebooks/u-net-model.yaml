@@ -6,7 +6,7 @@ config:
   layers:
   - class_name: InputLayer
     config:
-      batch_input_shape: !!python/tuple [null, 160, 160, 3]
+      batch_input_shape: !!python/tuple [null, 256, 256, 3]
       dtype: float32
       name: input_1
       sparse: false
@@ -41,6 +41,37 @@ config:
         - 0
         - {}
     name: conv2d_1
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_1
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_1
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_1
   - class_name: Conv2D
     config:
       activation: relu
@@ -65,11 +96,42 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - conv2d_1
+    - - - batch_normalization_1
         - 0
         - 0
         - {}
     name: conv2d_2
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_2
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_2
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_2
   - class_name: MaxPooling2D
     config:
       data_format: channels_last
@@ -79,7 +141,7 @@ config:
       strides: *id003
       trainable: true
     inbound_nodes:
-    - - - conv2d_2
+    - - - batch_normalization_2
         - 0
         - 0
         - {}
@@ -113,6 +175,37 @@ config:
         - 0
         - {}
     name: conv2d_3
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_3
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_3
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_3
   - class_name: Conv2D
     config:
       activation: relu
@@ -137,11 +230,42 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - conv2d_3
+    - - - batch_normalization_3
         - 0
         - 0
         - {}
     name: conv2d_4
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_4
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_4
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_4
   - class_name: MaxPooling2D
     config:
       data_format: channels_last
@@ -151,7 +275,7 @@ config:
       strides: *id004
       trainable: true
     inbound_nodes:
-    - - - conv2d_4
+    - - - batch_normalization_4
         - 0
         - 0
         - {}
@@ -185,6 +309,37 @@ config:
         - 0
         - {}
     name: conv2d_5
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_5
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_5
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_5
   - class_name: Conv2D
     config:
       activation: relu
@@ -209,11 +364,42 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - conv2d_5
+    - - - batch_normalization_5
         - 0
         - 0
         - {}
     name: conv2d_6
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_6
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_6
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_6
   - class_name: MaxPooling2D
     config:
       data_format: channels_last
@@ -223,7 +409,7 @@ config:
       strides: *id005
       trainable: true
     inbound_nodes:
-    - - - conv2d_6
+    - - - batch_normalization_6
         - 0
         - 0
         - {}
@@ -257,6 +443,37 @@ config:
         - 0
         - {}
     name: conv2d_7
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_7
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_7
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_7
   - class_name: Conv2D
     config:
       activation: relu
@@ -281,11 +498,42 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - conv2d_7
+    - - - batch_normalization_7
         - 0
         - 0
         - {}
     name: conv2d_8
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_8
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_8
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_8
   - class_name: MaxPooling2D
     config:
       data_format: channels_last
@@ -295,7 +543,7 @@ config:
       strides: *id006
       trainable: true
     inbound_nodes:
-    - - - conv2d_8
+    - - - batch_normalization_8
         - 0
         - 0
         - {}
@@ -329,6 +577,37 @@ config:
         - 0
         - {}
     name: conv2d_9
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_9
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_9
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_9
   - class_name: Conv2D
     config:
       activation: relu
@@ -353,11 +632,42 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - conv2d_9
+    - - - batch_normalization_9
         - 0
         - 0
         - {}
     name: conv2d_10
+  - class_name: BatchNormalization
+    config:
+      axis: -1
+      beta_constraint: null
+      beta_initializer:
+        class_name: Zeros
+        config: {}
+      beta_regularizer: null
+      center: true
+      epsilon: 0.001
+      gamma_constraint: null
+      gamma_initializer:
+        class_name: Ones
+        config: {}
+      gamma_regularizer: null
+      momentum: 0.99
+      moving_mean_initializer:
+        class_name: Zeros
+        config: {}
+      moving_variance_initializer:
+        class_name: Ones
+        config: {}
+      name: batch_normalization_10
+      scale: true
+      trainable: true
+    inbound_nodes:
+    - - - conv2d_10
+        - 0
+        - 0
+        - {}
+    name: batch_normalization_10
   - class_name: UpSampling2D
     config:
       data_format: channels_last
@@ -365,7 +675,7 @@ config:
       size: !!python/tuple [2, 2]
       trainable: true
     inbound_nodes:
-    - - - conv2d_10
+    - - - batch_normalization_10
         - 0
         - 0
         - {}
@@ -377,11 +687,19 @@ config:
         - 0
         - 0
         - &id007 {}
-      - - conv2d_8
+      - - batch_normalization_8
         - 0
         - 0
         - *id007
     name: concatenate_1
+  - class_name: Dropout
+    config: {name: dropout_1, rate: 0.2, trainable: true}
+    inbound_nodes:
+    - - - concatenate_1
+        - 0
+        - 0
+        - {}
+    name: dropout_1
   - class_name: Conv2D
     config:
       activation: relu
@@ -406,7 +724,7 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - concatenate_1
+    - - - dropout_1
         - 0
         - 0
         - {}
@@ -459,11 +777,19 @@ config:
         - 0
         - 0
         - &id008 {}
-      - - conv2d_6
+      - - batch_normalization_6
         - 0
         - 0
         - *id008
     name: concatenate_2
+  - class_name: Dropout
+    config: {name: dropout_2, rate: 0.2, trainable: true}
+    inbound_nodes:
+    - - - concatenate_2
+        - 0
+        - 0
+        - {}
+    name: dropout_2
   - class_name: Conv2D
     config:
       activation: relu
@@ -488,7 +814,7 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - concatenate_2
+    - - - dropout_2
         - 0
         - 0
         - {}
@@ -541,11 +867,19 @@ config:
         - 0
         - 0
         - &id009 {}
-      - - conv2d_4
+      - - batch_normalization_4
         - 0
         - 0
         - *id009
     name: concatenate_3
+  - class_name: Dropout
+    config: {name: dropout_3, rate: 0.2, trainable: true}
+    inbound_nodes:
+    - - - concatenate_3
+        - 0
+        - 0
+        - {}
+    name: dropout_3
   - class_name: Conv2D
     config:
       activation: relu
@@ -570,7 +904,7 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - concatenate_3
+    - - - dropout_3
         - 0
         - 0
         - {}
@@ -623,11 +957,19 @@ config:
         - 0
         - 0
         - &id010 {}
-      - - conv2d_2
+      - - batch_normalization_2
         - 0
         - 0
         - *id010
     name: concatenate_4
+  - class_name: Dropout
+    config: {name: dropout_4, rate: 0.2, trainable: true}
+    inbound_nodes:
+    - - - concatenate_4
+        - 0
+        - 0
+        - {}
+    name: dropout_4
   - class_name: Conv2D
     config:
       activation: relu
@@ -652,7 +994,7 @@ config:
       trainable: true
       use_bias: true
     inbound_nodes:
-    - - - concatenate_4
+    - - - dropout_4
         - 0
         - 0
         - {}
