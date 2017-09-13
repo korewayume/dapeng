@@ -1,3 +1,4 @@
+.idea
 .ipynb_checkpoints
 *.npy
 *.hdf5
