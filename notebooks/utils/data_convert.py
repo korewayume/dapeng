@@ -57,7 +57,7 @@ def train_test_split(batch_no, from_x_directory, from_y_directory, to_train_x_di
 
 if __name__ == '__main__':
     xpaths = [
-        "/Users/mac/Desktop/beizhen/重新做的北镇样本数据和原始数据/Workspace_W100_H100_F1-1_TO100-5_2017_09_13_1014_raw",
+        "/Users/mac/Desktop/beizhen/北镇第一批数据/Workspace_W100_H100_F1-1_TO100-5_2017_09_13_1014_raw",
         "/Users/mac/Desktop/beizhen/北镇第二批数据/Workspace_W100_H100_F16-1_TO25-5_2017_09_13_raw",
         "/Users/mac/Desktop/beizhen/北镇第三批数据/Workspace_W100_H100_F1-11_TO15-15_2017_09_14_1346_raw",
         "/Users/mac/Desktop/beizhen/北镇第四批数据/Workspace_W100_H100_F21-11_TO25-15_2017_09_14_raw",
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     ]
     ypaths = [
-        "/Users/mac/Desktop/beizhen/重新做的北镇样本数据和原始数据/Workspace_W100_H100_F1-1_TO100-5_2017_09_13_1014",
+        "/Users/mac/Desktop/beizhen/北镇第一批数据/Workspace_W100_H100_F1-1_TO100-5_2017_09_13_1014",
         "/Users/mac/Desktop/beizhen/北镇第二批数据/Workspace_W100_H100_F16-1_TO25-5_2017_09_13",
         "/Users/mac/Desktop/beizhen/北镇第三批数据/Workspace_W100_H100_F1-11_TO15-15_2017_09_14_1346",
         "/Users/mac/Desktop/beizhen/北镇第四批数据/Workspace_W100_H100_F21-11_TO25-15_2017_09_14",
