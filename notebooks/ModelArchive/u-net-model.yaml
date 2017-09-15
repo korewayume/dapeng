@@ -31,7 +31,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_1
-      padding: same
+      padding: !!python/unicode 'same'
       strides: &id002 !!python/tuple [1, 1]
       trainable: true
       use_bias: true
@@ -91,7 +91,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_2
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -165,7 +165,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_3
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -225,7 +225,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_4
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -299,7 +299,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_5
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -359,7 +359,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_6
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -433,7 +433,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_7
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -493,7 +493,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_8
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -567,7 +567,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_9
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -627,7 +627,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_10
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -719,7 +719,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_11
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -748,7 +748,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_12
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -809,7 +809,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_13
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -838,7 +838,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_14
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -899,7 +899,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_15
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -928,7 +928,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_16
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -989,7 +989,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_17
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true
@@ -1018,7 +1018,7 @@ config:
       kernel_regularizer: null
       kernel_size: !!python/tuple [3, 3]
       name: conv2d_18
-      padding: same
+      padding: !!python/unicode 'same'
       strides: *id002
       trainable: true
       use_bias: true

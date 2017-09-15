@@ -1,69 +1,13 @@
-import threading, glob, os, random
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
+import os
+import re
 import numpy as np
 from osgeo import gdal
 from gdalconst import GA_ReadOnly
-
-
-def test_reader(p):
-    print p
-
-
-class ImageDataGenerator(object):
-    def __init__(self, x_directory, y_directory, batch_size=32, ext="tif", shuffle=True, seed=None):
-        self.lock = threading.Lock()
-        self.shuffle = shuffle
-        self.seed = seed
-        self.gen = None
-        self.batch_size = batch_size
-        self.x_reader = None
-        self.y_reader = None
-        self.steps = None
-        extension = ext if ext.startswith(os.path.extsep) else os.path.extsep + ext
-        filenames = [os.path.basename(filepath) for filepath in glob.glob(os.path.join(x_directory, "*" + extension))]
-        if shuffle:
-            random.shuffle(filenames)
-        x_filepaths = [os.path.join(x_directory, filename) for filename in filenames]
-        y_filepaths = [os.path.join(y_directory, filename) for filename in filenames]
-        self.path_pairs = zip(x_filepaths, y_filepaths)
-        total_samples = len(self.path_pairs)
-        self.steps = total_samples / self.batch_size + 1 if total_samples % self.batch_size else total_samples / self.batch_size
-
-    def path_pair_gen(self):
-        random.shuffle(self.path_pairs)
-        for i in range(self.steps):
-            pairs = self.path_pairs[i * self.batch_size:i * self.batch_size + self.batch_size]
-            data_pairs = [(self.x_reader(x_file), self.y_reader(y_file)) for x_file, y_file in pairs]
-            x_data = np.stack([pair[0] for pair in data_pairs])
-            y_data = np.stack([pair[1] for pair in data_pairs])
-            del data_pairs
-            del pairs
-            yield x_data, y_data
-
-    def flow_from_directory(self, x_reader=None, y_reader=None):
-        self.x_reader = x_reader
-        self.y_reader = y_reader
-
-        return self
-
-    def next(self):
-        # with self.lock:
-        if self.gen:
-            try:
-                x, y = next(self.gen)
-            except StopIteration:
-                self.gen = self.path_pair_gen()
-                x, y = next(self.gen)
-        else:
-            self.gen = self.path_pair_gen()
-            x, y = next(self.gen)
-        return x, y
-
-    def __next__(self):
-        return self.next()
-
-    def __iter__(self):
-        return self
-
+from keras_abc import Iterator
+import keras.backend as K
 
 
 def x_tif_reader(path):
@@ -71,7 +15,7 @@ def x_tif_reader(path):
     channels = []
     for band in [1, 2, 3]:
         channels.append(tif.GetRasterBand(band).ReadAsArray())
-    return np.stack(channels, axis=-1)
+    return np.stack(channels, axis=-1).astype(K.floatx())
 
 
 def y_tif_reader(path):
@@ -81,16 +25,48 @@ def y_tif_reader(path):
         channels.append(tif.GetRasterBand(band).ReadAsArray())
     gray = np.stack(channels, axis=-1)
     gray[gray != 0] = 1
-    return gray
+    return gray.astype(K.floatx())
 
 
-# i = ImageDataGenerator("/Users/mac/Downloads/train/x", "/Users/mac/Downloads/train/y")
-# g = i.flow_from_directory(x_reader=test_reader, y_reader=test_reader)
+class ImageDirectoryIterator(Iterator):
+    def __init__(self, directory_x, directory_y,
+                 x_reader, y_reader, filename_regex,
+                 batch_size=32, shuffle=True, seed=None):
+        self.x_reader = x_reader
+        self.y_reader = y_reader
+
+        x_filenames = [filename for filename in os.listdir(directory_x)
+                       if re.match(filename_regex, filename)]
+        y_filenames = [filename for filename in os.listdir(directory_y)
+                       if re.match(filename_regex, filename)]
+
+        assert set(x_filenames) == set(y_filenames), "x文件名与y文件名不一致。"
+
+        filenames = sorted(x_filenames)
+
+        self.path_pairs = [(os.path.join(directory_x, filename), os.path.join(directory_y, filename))
+                           for filename in filenames]
+        # 计算样本总数
+        self.samples = len(filenames)
+
+        print("总共找到{}个样本。".format(self.samples))
+
+        super(ImageDirectoryIterator, self).__init__(self.samples, batch_size, shuffle, seed)
+
+    def _get_batch_of_samples(self, index_array):
+        batch_x, batch_y = [], []
+        for i, j in enumerate(index_array):
+            x_path, y_path = self.path_pairs[j]
+            batch_x.append(self.x_reader(x_path))
+            batch_y.append(self.y_reader(y_path))
+        return np.stack(batch_x), np.stack(batch_y)
+
+
 if __name__ == '__main__':
-    valid_x_path, valid_y_path, valid_batch_size = (u'/Users/mac/Desktop/beizhen/data/validation/x',
- u'/Users/mac/Desktop/beizhen/data/validation/y',
- 10)
-    valid_gen = ImageDataGenerator(valid_x_path, valid_y_path, batch_size=valid_batch_size).flow_from_directory(
-        x_reader=x_tif_reader, y_reader=x_tif_reader)
-    while True:
-        next(valid_gen)
+    dir_x, dir_y, bs = (u'/Users/mac/Desktop/beizhen/data/train/x',
+                        u'/Users/mac/Desktop/beizhen/data/train/y',
+                        10)
+    gen = ImageDirectoryIterator(dir_x, dir_y, x_tif_reader, y_tif_reader, r"^\d{3}_\d{3}_\d{3}\.tif")
+    print("{}batches.".format(len(gen)))
+    for _ in range(10000):
+        next(gen)
