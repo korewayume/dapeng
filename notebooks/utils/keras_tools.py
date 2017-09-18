@@ -46,12 +46,10 @@ class ImageDirectoryIterator(Iterator):
 
         self.path_pairs = [(os.path.join(directory_x, filename), os.path.join(directory_y, filename))
                            for filename in filenames]
-        # 计算样本总数
-        self.samples = len(filenames)
 
-        print("总共找到{}个样本。".format(self.samples))
+        print("总共找到{}个样本。".format(len(self.path_pairs)))
 
-        super(ImageDirectoryIterator, self).__init__(self.samples, batch_size, shuffle, seed)
+        super(ImageDirectoryIterator, self).__init__(len(self.path_pairs), batch_size, shuffle, seed)
 
     def _get_batch_of_samples(self, index_array):
         batch_x, batch_y = [], []
