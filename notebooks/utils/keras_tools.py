@@ -29,12 +29,18 @@ def y_tif_reader(path):
 
 
 class ImageDirectoryIterator(Iterator):
-    def __init__(self, directory_x, directory_y,
-                 x_reader, y_reader, filename_regex,
+    def __init__(self, path_pairs, x_reader, y_reader,
                  batch_size=32, shuffle=True, seed=None):
         self.x_reader = x_reader
         self.y_reader = y_reader
+        self.path_pairs = path_pairs
+        print("总共找到{}个样本。".format(len(self.path_pairs)))
+        super(ImageDirectoryIterator, self).__init__(len(self.path_pairs), batch_size, shuffle, seed)
 
+    @classmethod
+    def load_from_directories(cls, directory_x, directory_y,
+                              x_reader, y_reader, filename_regex,
+                              batch_size=32, shuffle=True, seed=None):
         x_filenames = [filename for filename in os.listdir(directory_x)
                        if re.match(filename_regex, filename)]
         y_filenames = [filename for filename in os.listdir(directory_y)
@@ -44,12 +50,10 @@ class ImageDirectoryIterator(Iterator):
 
         filenames = sorted(x_filenames)
 
-        self.path_pairs = [(os.path.join(directory_x, filename), os.path.join(directory_y, filename))
-                           for filename in filenames]
+        path_pairs = [(os.path.join(directory_x, filename), os.path.join(directory_y, filename))
+                      for filename in filenames]
 
-        print("总共找到{}个样本。".format(len(self.path_pairs)))
-
-        super(ImageDirectoryIterator, self).__init__(len(self.path_pairs), batch_size, shuffle, seed)
+        return cls(path_pairs, x_reader, y_reader, batch_size=batch_size, shuffle=shuffle, seed=seed)
 
     def _get_batch_of_samples(self, index_array):
         batch_x, batch_y = [], []
