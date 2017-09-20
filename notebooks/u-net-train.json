@@ -1,6 +1,6 @@
 {
     "tensorboard_log_directory":         "/Users/mac/Desktop/tensorflow_logs",
-    "load_weigth":                       false,
+    "load_weight":                       false,
     "fit_verbose":                       true,
     "learning_rate":                     0.001,
     "dropout_rate":                      0.2,

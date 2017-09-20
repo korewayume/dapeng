@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from keras.models import Model
+from keras.optimizers import Adam
+from dapeng.metrics import  jaccard_coefficient
 from keras.layers import Conv2D, BatchNormalization, MaxPool2D, UpSampling2D, Dropout, Input, concatenate
 
 """
@@ -9,9 +12,16 @@ model = unet5(256, optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=
 """
 
 
-def unet5(size, optimizer, loss, metrics, dropout_rate=0.2):
-    inputs = Input(shape=(size, size, 3))
+def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2):
 
+    if optimizer is None:
+        optimizer = Adam(lr=1e-3)
+    if loss is None:
+        loss = "binary_crossentropy"
+    if metrics is None:
+        metrics = [jaccard_coefficient]
+
+    inputs = Input(shape=(size, size, 3))
     # left
 
     conv1 = Conv2D(32, (3, 3), activation='relu', padding='same')(inputs)
