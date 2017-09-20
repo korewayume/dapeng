@@ -28,7 +28,15 @@ def y_tif_reader(path):
     return gray.astype(K.floatx())
 
 
-def load_from_directories(directory_x, directory_y,
+def predict_from_directory(directory_x, x_reader, filename_regex, batch_size=32):
+    filenames = sorted([filename for filename in os.listdir(directory_x)
+                        if re.match(filename_regex, filename)])
+    path_pairs = [(os.path.join(directory_x, filename), None)
+                  for filename in filenames]
+    return ImageDirectoryIterator(path_pairs, x_reader, None, batch_size=batch_size, shuffle=False)
+
+
+def train_from_directories(directory_x, directory_y,
                           x_reader, y_reader, filename_regex,
                           batch_size=32, shuffle=True, seed=None):
     x_filenames = [filename for filename in os.listdir(directory_x)
@@ -52,7 +60,7 @@ class ImageDirectoryIterator(Iterator):
         self.x_reader = x_reader
         self.y_reader = y_reader
         self.path_pairs = path_pairs
-        print("总共找到{}个样本。".format(len(self.path_pairs)))
+        # print("总共找到{}个样本。".format(len(self.path_pairs)))
         super(ImageDirectoryIterator, self).__init__(len(self.path_pairs), batch_size, shuffle, seed)
 
     def _get_batch_of_samples(self, index_array):
@@ -75,7 +83,7 @@ if __name__ == '__main__':
     dir_x, dir_y, bs = (u'/Users/mac/Desktop/beizhen/data/train/x',
                         u'/Users/mac/Desktop/beizhen/data/train/y',
                         10)
-    gen = load_from_directories(dir_x, dir_y, x_tif_reader, y_tif_reader, r"^\d{3}_\d{3}_\d{3}\.tif")
+    gen = train_from_directories(dir_x, dir_y, x_tif_reader, y_tif_reader, r"^\d{3}_\d{3}_\d{3}\.tif")
     print("{}batches.".format(len(gen)))
     for _ in range(10000):
         next(gen)
