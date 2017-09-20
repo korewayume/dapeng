@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 import os
 import re
 import numpy as np
-from osgeo import gdal
-from gdalconst import GA_ReadOnly
 from keras_abc import Iterator
 import keras.backend as K
 
 
 def x_tif_reader(path):
+    from osgeo import gdal
+    from gdalconst import GA_ReadOnly
     tif = gdal.Open(path, GA_ReadOnly)
     channels = []
     for band in [1, 2, 3]:
@@ -19,6 +19,8 @@ def x_tif_reader(path):
 
 
 def y_tif_reader(path):
+    from osgeo import gdal
+    from gdalconst import GA_ReadOnly
     tif = gdal.Open(path, GA_ReadOnly)
     channels = []
     for band in [1]:
