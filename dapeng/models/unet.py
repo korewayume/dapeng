@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import os
 from keras.models import Model
 from keras.optimizers import Adam
-from dapeng.metrics import  jaccard_coefficient
+from dapeng.metrics import jaccard_coefficient
+from dapeng.models import model_weights_archive
 from keras.layers import Conv2D, BatchNormalization, MaxPool2D, UpSampling2D, Dropout, Input, concatenate
 
 """
@@ -12,7 +14,7 @@ model = unet5(256, optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=
 """
 
 
-def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2):
+def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2, load_weights=False):
 
     if optimizer is None:
         optimizer = Adam(lr=1e-3)
@@ -79,5 +81,14 @@ def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2):
 
     model = Model(inputs=inputs, outputs=conv10)
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+    if load_weights:
+        weight_path = os.path.join(model_weights_archive, "unet5.hdf5")
+        if not os.path.exists(weight_path):
+            import six.moves.urllib as urllib
+            opener = urllib.request.URLopener()
+            download_url = "https://github.com/korewayume/dapeng/releases/download/v1.0/release_v1.0.hdf5"
+            opener.retrieve(download_url, weight_path)
+        model.load_weights(weight_path)
 
     return model
