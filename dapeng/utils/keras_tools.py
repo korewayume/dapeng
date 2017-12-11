@@ -53,7 +53,8 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
 
 
 def random_transform(rg):
-    angle = np.random.choice(np.random.uniform([-rg, -rg + 90, -rg + 180, -rg + 270], [rg, rg + 90, rg + 180, rg + 270]))
+    angle = np.random.uniform(-rg, rg)
+    # angle = np.random.choice(np.random.uniform([-rg, -rg + 90, -rg + 180, -rg + 270], [rg, rg + 90, rg + 180, rg + 270]))
     vertical_flip = np.random.choice([True, False])
     horizontal_flip = np.random.choice([True, False])
     return partial(transform_image, angle=angle, vertical_flip=vertical_flip, horizontal_flip=horizontal_flip)
