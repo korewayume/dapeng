@@ -41,18 +41,11 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
         image = image[::-1]
     h, w, d = image.shape
 
-    padded_image = np.zeros((h * 3, w * 3, d), dtype=np.uint8)
-    padded_image[h:h * 2, w:w * 2] = image
-    padded_image[0:h, w:w * 2] = image[::-1]
-    padded_image[h * 2:h * 3, w:w * 2] = image[::-1]
-    padded_image[h:h * 2, 0:w] = image[:, ::-1]
-    padded_image[h:h * 2, w * 2:w * 3] = image[:, ::-1]
-
     center = (h * 3 / 2 - 0.5, w * 3 / 2 - 0.5)
 
     if gray:
-        padded_image = np.squeeze(padded_image)
-    transformed = transform.rotate(padded_image, angle=angle, center=center, mode="constant", preserve_range=True)
+        image = np.squeeze(image)
+    transformed = transform.rotate(image, angle=angle, center=center, mode="reflect", preserve_range=True)
     if gray:
         transformed = np.expand_dims(transformed, -1)
 
