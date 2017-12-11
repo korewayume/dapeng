@@ -32,6 +32,7 @@ def y_tif_reader(path):
 
 
 def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False):
+    dtype = image.dtype
     from skimage import transform
     h, w = image.shape[0:2]
     center = (h / 2 - 0.5, w / 2 - 0.5)
@@ -44,7 +45,7 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
         transformed = transformed[:, ::-1]
     if vertical_flip:
         transformed = transformed[::-1]
-    return transformed
+    return transformed.astype(dtype)
 
 
 def random_transform(rg):
