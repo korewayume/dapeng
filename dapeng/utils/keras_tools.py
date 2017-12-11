@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import os
 import re
+from functools import partial
 import numpy as np
 from keras_abc import Iterator
 import keras.backend as K
@@ -30,6 +31,29 @@ def y_tif_reader(path):
     return gray.astype(K.floatx())
 
 
+def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False):
+    from skimage import transform
+    h, w = image.shape[0:2]
+    center = (h / 2 - 0.5, w / 2 - 0.5)
+    if gray:
+        image = np.squeeze(image)
+    transformed = transform.rotate(image, angle=angle, center=center, mode="reflect")
+    if gray:
+        transformed = np.expand_dims(transformed, -1)
+    if horizontal_flip:
+        transformed = transformed[:, ::-1]
+    if vertical_flip:
+        transformed = transformed[::-1]
+    return transformed
+
+
+def random_transform(rg):
+    angle = np.random.uniform(-rg, rg)
+    vertical_flip = np.random.choice([True, False])
+    horizontal_flip = np.random.choice([True, False])
+    return partial(transform_image, angle=angle, vertical_flip=vertical_flip, horizontal_flip=horizontal_flip)
+
+
 def predict_from_directory(directory_x, x_reader, filename_regex, batch_size=32):
     filenames = sorted([filename for filename in os.listdir(directory_x)
                         if re.match(filename_regex, filename)])
@@ -39,8 +63,8 @@ def predict_from_directory(directory_x, x_reader, filename_regex, batch_size=32)
 
 
 def train_from_directories(directory_x, directory_y,
-                          x_reader, y_reader, filename_regex,
-                          batch_size=32, shuffle=True, seed=None):
+                           x_reader, y_reader, filename_regex,
+                           batch_size=32, shuffle=True, seed=None, random_transform_func=None):
     x_filenames = [filename for filename in os.listdir(directory_x)
                    if re.match(filename_regex, filename)]
     y_filenames = [filename for filename in os.listdir(directory_y)
@@ -53,28 +77,31 @@ def train_from_directories(directory_x, directory_y,
     path_pairs = [(os.path.join(directory_x, filename), os.path.join(directory_y, filename))
                   for filename in filenames]
 
-    return ImageDirectoryIterator(path_pairs, x_reader, y_reader, batch_size=batch_size, shuffle=shuffle, seed=seed)
+    return ImageDirectoryIterator(path_pairs, x_reader, y_reader, batch_size=batch_size, shuffle=shuffle, seed=seed,
+                                  random_transform_func=random_transform_func)
 
 
 class ImageDirectoryIterator(Iterator):
     def __init__(self, path_pairs, x_reader=None, y_reader=None,
-                 batch_size=32, shuffle=True, seed=None):
+                 batch_size=32, shuffle=True, random_transform_func=None, seed=None):
         self.x_reader = x_reader
         self.y_reader = y_reader
         self.path_pairs = path_pairs
+        self.random_transform_func = random_transform_func
         # print("总共找到{}个样本。".format(len(self.path_pairs)))
         super(ImageDirectoryIterator, self).__init__(len(self.path_pairs), batch_size, shuffle, seed)
 
     def _get_batch_of_samples(self, index_array):
         batch_x, batch_y = [], []
-        for i, j in enumerate(index_array):
+        for i in index_array:
+            x_path, y_path = self.path_pairs[i]
+            x = self.x_reader(x_path)
+            x = self.random_transform_func(x) if self.random_transform_func else x
+            batch_x.append(x)
             if self.y_reader:
-                x_path, y_path = self.path_pairs[j]
-                batch_x.append(self.x_reader(x_path))
-                batch_y.append(self.y_reader(y_path))
-            else:
-                x_path = self.path_pairs[j][0]
-                batch_x.append(self.x_reader(x_path))
+                y = self.y_reader(y_path)
+                y = self.random_transform_func(y, gray=True) if self.random_transform_func else y
+                batch_y.append(y)
         if batch_y:
             return np.stack(batch_x), np.stack(batch_y)
         else:
