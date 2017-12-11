@@ -6,7 +6,7 @@ from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from dapeng.models.unet import unet5
 from dapeng.metrics import jaccard_coefficient
-from dapeng.utils.keras_tools import x_tif_reader, y_tif_reader, train_from_directories
+from dapeng.utils.keras_tools import x_tif_reader, y_tif_reader, train_from_directories, random_transform
 
 with open("u-net-train.json") as cfg:
     configuration = json.load(cfg)
@@ -45,7 +45,8 @@ model_callbacks = [model_checkpoint, tensorboard]
 filename_regex = re.compile(r"^\d{3}_\d{3}_\d{3}\.tif")
 print("正在扫描训练样本")
 train_gen = train_from_directories(train_x_path, train_y_path, x_tif_reader, y_tif_reader,
-                                   filename_regex, batch_size=batch_size)
+                                   filename_regex, batch_size=batch_size,
+                                   random_transform_func=random_transform(30))
 print("找到训练样本：{}".format(len(train_gen)))
 print("正在扫描验证样本")
 valid_gen = train_from_directories(valid_x_path, valid_y_path, x_tif_reader, y_tif_reader,
