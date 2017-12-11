@@ -32,21 +32,31 @@ def y_tif_reader(path):
 
 
 def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False):
+    from skimage import transform
     dtype = image.dtype
     image = image.astype(np.uint8)
-    from skimage import transform
-    h, w = image.shape[0:2]
-    center = (h / 2 - 0.5, w / 2 - 0.5)
+    if horizontal_flip:
+        image = image[:, ::-1]
+    if vertical_flip:
+        image = image[::-1]
+    h, w, d = image.shape
+
+    padded_image = np.zeros((h * 3, w * 3, d), dtype=np.uint8)
+    padded_image[h:h * 2, w:w * 2] = image
+    padded_image[0:h, w:w * 2] = image[::-1]
+    padded_image[h * 2:h * 3, w:w * 2] = image[::-1]
+    padded_image[h:h * 2, 0:w] = image[:, ::-1]
+    padded_image[h:h * 2, w * 2:w * 3] = image[:, ::-1]
+
+    center = (h * 3 / 2 - 0.5, w * 3 / 2 - 0.5)
+
     if gray:
-        image = np.squeeze(image)
-    transformed = transform.rotate(image, angle=angle, center=center, mode="constant", preserve_range=True)
+        padded_image = np.squeeze(padded_image)
+    transformed = transform.rotate(padded_image, angle=angle, center=center, mode="constant", preserve_range=True)
     if gray:
         transformed = np.expand_dims(transformed, -1)
-    if horizontal_flip:
-        transformed = transformed[:, ::-1]
-    if vertical_flip:
-        transformed = transformed[::-1]
-    return transformed.astype(dtype)
+
+    return transformed[h:h * 2, w:w * 2].astype(dtype)
 
 
 def random_transform(rg):
