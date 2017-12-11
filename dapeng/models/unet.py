@@ -4,7 +4,6 @@ import os
 from keras.models import Model
 from keras.optimizers import Adam
 from dapeng.metrics import jaccard_coefficient
-from dapeng.models import model_weights_archive
 from keras.layers import Conv2D, BatchNormalization, MaxPool2D, UpSampling2D, Dropout, Input, concatenate
 
 """
@@ -12,6 +11,11 @@ from keras.optimizers import Adam
 from dapeng.mertrics import jaccard_coefficient
 model = unet5(256, optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=[jaccard_coefficient])
 """
+
+model_weights_archive = "~/.dapeng/weights/"
+
+if not os.path.exists(model_weights_archive):
+    os.makedirs(model_weights_archive)
 
 
 def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2, load_weights=False):
