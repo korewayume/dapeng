@@ -39,7 +39,7 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
     center = (h / 2 - 0.5, w / 2 - 0.5)
     if gray:
         image = np.squeeze(image)
-    transformed = transform.rotate(image, angle=angle, center=center, mode="constant")
+    transformed = transform.rotate(image, angle=angle, center=center, mode="constant", preserve_range=True)
     if gray:
         transformed = np.expand_dims(transformed, -1)
     if horizontal_flip:
