@@ -12,7 +12,7 @@ from dapeng.mertrics import jaccard_coefficient
 model = unet5(256, optimizer=Adam(lr=1e-3), loss='binary_crossentropy', metrics=[jaccard_coefficient])
 """
 
-model_weights_archive = "~/.dapeng/weights/"
+model_weights_archive = os.path.expanduser("~/.dapeng/weights/")
 
 if not os.path.exists(model_weights_archive):
     os.makedirs(model_weights_archive)
