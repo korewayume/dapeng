@@ -31,7 +31,7 @@ def y_tif_reader(path):
     return gray.astype(K.floatx())
 
 
-def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False):
+def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False, mode="constant"):
     from skimage import transform
     dtype = image.dtype
     image = image.astype(np.uint8)
@@ -45,19 +45,19 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
 
     if gray:
         image = np.squeeze(image)
-    transformed = transform.rotate(image, angle=angle, center=center, mode="reflect", preserve_range=True)
+    transformed = transform.rotate(image, angle=angle, center=center, mode=mode, preserve_range=True)
     if gray:
         transformed = np.expand_dims(transformed, -1)
 
     return transformed.astype(dtype)
 
 
-def random_transform(rg):
+def random_transform(rg, mode="constant"):
     # angle = np.random.uniform(-rg, rg)
     angle = np.random.choice(np.random.uniform([-rg, -rg + 90, -rg + 180, -rg + 270], [rg, rg + 90, rg + 180, rg + 270]))
     vertical_flip = np.random.choice([True, False])
     horizontal_flip = np.random.choice([True, False])
-    return partial(transform_image, angle=angle, vertical_flip=vertical_flip, horizontal_flip=horizontal_flip)
+    return partial(transform_image, angle=angle, vertical_flip=vertical_flip, horizontal_flip=horizontal_flip, mode=mode)
 
 
 def predict_from_directory(directory_x, x_reader, filename_regex, batch_size=32):
