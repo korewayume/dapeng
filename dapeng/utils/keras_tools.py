@@ -16,7 +16,7 @@ def x_tif_reader(path):
     channels = []
     for band in [1, 2, 3]:
         channels.append(tif.GetRasterBand(band).ReadAsArray())
-    return np.stack(channels, axis=-1).astype(K.floatx())
+    return np.stack(channels, axis=-1)
 
 
 def y_tif_reader(path):
@@ -28,10 +28,34 @@ def y_tif_reader(path):
         channels.append(tif.GetRasterBand(band).ReadAsArray())
     gray = np.stack(channels, axis=-1)
     gray[gray != 0] = 1
-    return gray.astype(K.floatx())
+    return gray
 
 
-def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, gray=False, mode="constant"):
+def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, mode="constant", gray=False):
+    """Rotate image by a certain angle around its center.
+
+        Parameters
+        ----------
+        image : ndarray
+            输入图像.
+        angle : float
+            Rotation angle in degrees in counter-clockwise direction.
+        horizontal_flip : boolean
+            是否水平翻转.
+        vertical_flip : boolean
+            是否垂直翻转.
+        mode : {'constant', 'edge', 'symmetric', 'reflect', 'wrap'}, optional
+            Points outside the boundaries of the input are filled according
+            to the given mode.  Modes match the behaviour of `numpy.pad`.
+        gray : boolean
+            shape = (h, w, 1) 的单通道图像.
+
+        Returns
+        -------
+        rotated : ndarray
+            旋转后的图像.
+
+        """
     from skimage import transform
     dtype = image.dtype
     image = image.astype(np.uint8)
@@ -39,16 +63,11 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
         image = image[:, ::-1]
     if vertical_flip:
         image = image[::-1]
-    h, w, d = image.shape
-
-    center = (h / 2 - 0.5, w / 2 - 0.5)
-
     if gray:
         image = np.squeeze(image)
-    transformed = transform.rotate(image, angle=angle, center=center, mode=mode, preserve_range=True)
+    transformed = transform.rotate(image, angle=angle, mode=mode, preserve_range=True)
     if gray:
         transformed = np.expand_dims(transformed, -1)
-
     return transformed.astype(dtype)
 
 
@@ -103,11 +122,11 @@ class ImageDirectoryIterator(Iterator):
             x_path, y_path = self.path_pairs[i]
             x = self.x_reader(x_path)
             x = self.random_transform_func(x) if self.random_transform_func else x
-            batch_x.append(x)
+            batch_x.append(x.astype(K.floatx()))
             if self.y_reader:
                 y = self.y_reader(y_path)
                 y = self.random_transform_func(y, gray=True) if self.random_transform_func else y
-                batch_y.append(y)
+                batch_y.append(y.astype(K.floatx()))
         if batch_y:
             return np.stack(batch_x), np.stack(batch_y)
         else:
