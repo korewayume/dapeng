@@ -1,6 +1,6 @@
 {
     "tensorboard_log_directory":         "/Users/mac/Desktop/tensorflow_logs",
-    "load_weights":                       false,
+    "load_weights":                      false,
     "fit_verbose":                       true,
     "learning_rate":                     0.001,
     "dropout_rate":                      0.2,
@@ -10,5 +10,7 @@
     "train_y_path":                      "/Users/mac/Desktop/beizhen/data/train/y",
     "valid_x_path":                      "/Users/mac/Desktop/beizhen/data/validation/x",
     "valid_y_path":                      "/Users/mac/Desktop/beizhen/data/validation/y",
-    "valid_batch_size":                  10
+    "valid_batch_size":                  10,
+    "random_rotate_angle":               15,
+    "random_rotate_mode":                "reflect"
 }
