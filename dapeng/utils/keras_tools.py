@@ -49,7 +49,7 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
     if gray:
         transformed = np.expand_dims(transformed, -1)
 
-    return transformed[h:h * 2, w:w * 2].astype(dtype)
+    return transformed.astype(dtype)
 
 
 def random_transform(rg):
