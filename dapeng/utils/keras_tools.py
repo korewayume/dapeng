@@ -41,7 +41,7 @@ def transform_image(image, angle=0, horizontal_flip=False, vertical_flip=False, 
         image = image[::-1]
     h, w, d = image.shape
 
-    center = (h * 3 / 2 - 0.5, w * 3 / 2 - 0.5)
+    center = (h / 2 - 0.5, w / 2 - 0.5)
 
     if gray:
         image = np.squeeze(image)
