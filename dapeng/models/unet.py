@@ -24,9 +24,8 @@ CommonConv2D = partial(
     Conv2D,
     activation='relu',
     padding='same',
-    kernel_regularizer=l1(1e-3),
-    bias_regularizer=l1(1e-3),
-    activity_regularizer=l1(1e-3)
+    kernel_regularizer=l1(1e-5),
+    activity_regularizer=l1(1e-5)
 )
 
 
@@ -93,7 +92,7 @@ def unet5(size, optimizer=None, loss=None, metrics=None, dropout_rate=0.2, load_
     conv9 = CommonConv2D(32, (3, 3))(up9)
     conv9 = CommonConv2D(32, (3, 3))(conv9)
 
-    conv10 = Conv2D(1, (1, 1), activation='sigmoid', kernel_regularizer=l1(1e-3), bias_regularizer=l1(1e-3), activity_regularizer=l1(1e-3))(conv9)
+    conv10 = Conv2D(1, (1, 1), activation='sigmoid', kernel_regularizer=l1(1e-5), activity_regularizer=l1(1e-5))(conv9)
 
     model = Model(inputs=inputs, outputs=conv10)
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
