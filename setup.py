@@ -9,5 +9,5 @@ setup(name='dapeng',
       author='zhoujia',
       author_email='korewayume@foxmail.com',
       url='https://github.com/korewayume/dapeng',
-      install_requires=['keras>=2.0.8'],
+      install_requires=['keras>=2.0.8', 'tensorflow>=1.4.0'],
       packages=find_packages())
